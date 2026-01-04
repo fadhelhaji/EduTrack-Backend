@@ -2,7 +2,7 @@ const express = require("express");
 const Classes = require("../models/classes");
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/new", async (req, res) => {
   try {
     const newClass = await Classes.create(req.body);
     res.status(201).json({ class: newClass });
@@ -61,7 +61,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id/edit", async (req, res) => {
   try {
     const { id } = req.params;
     const updatedClass = await Classes.findByIdAndUpdate(

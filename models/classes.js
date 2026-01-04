@@ -21,13 +21,11 @@ const classSchema = mongoose.Schema({
   instructor: {
     type: mongoose.Schema.Types.ObjectId, // this line is basiclly when a user is created it has his own id from the data base so it needs it to connect data as join in SQL
     ref: 'User',
-    required: true,
   },
 
   student: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
   },
 });
 

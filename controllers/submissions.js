@@ -1,5 +1,5 @@
 const express = require("express");
-const Submission = require("../models/Submission");
+const Submission = require("../models/submission");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
