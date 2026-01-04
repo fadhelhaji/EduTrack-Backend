@@ -1,5 +1,5 @@
 const express = require("express");
-const Classes = require("../models/Classes");
+const Classes = require("../models/classes");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
