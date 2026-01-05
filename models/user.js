@@ -11,12 +11,14 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  role: {
-  type: String,
-  enum: ['user', 'admin'],
-  default: 'user',
-}
 });
+
+userSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    delete returnedObject.password;
+  },
+});
+
 // then we register the model with mongoose
 const User = mongoose.model('User', userSchema);
 

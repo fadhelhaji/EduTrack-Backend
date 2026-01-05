@@ -21,7 +21,7 @@ const authCtrl = require('./controllers/auth');
 const classCtrl = require('./controllers/classes');
 
 // middleware
-const verifyToken = require('./middleware/verifyToken(isSignIn)');
+const verifyToken = require('./middleware/verifyToken');
 
 // global middleware
 app.use(cors());
