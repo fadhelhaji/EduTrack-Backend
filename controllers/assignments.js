@@ -89,8 +89,8 @@ router.get("/class/:classId", async (req,res) =>{
         const assignments = await Assignment.find({ class: classId })
         .populate("instructor")
         res.status(200).json({ assignments });
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        console.log(err);
         res.status(500).json({ err: "Failed to get assignments for this class" });
     }
 })
