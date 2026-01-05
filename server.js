@@ -31,8 +31,6 @@ app.use(express.json());
 // public routes
 app.use('/auth', authCtrl);
 
-// auth middleware
-app.use(verifyToken);
 
 // protected routes
 app.get('/test', (req, res) => {
@@ -41,6 +39,8 @@ app.get('/test', (req, res) => {
 
 app.use('/class', classCtrl);
 
+// auth middleware
+app.use(verifyToken);
 // server
 app.listen(3000, () => {
   console.log('Express is ready');

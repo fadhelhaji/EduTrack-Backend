@@ -23,12 +23,15 @@ const classSchema = mongoose.Schema({
     ref: 'User',
   },
 
-  student: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  },
+student: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }
+  ],
+  
 });
 
-const Classes = mongoose.model('Classes', classSchema);
+const Class = mongoose.model('Classes', classSchema);
 
-module.exports = Classes;
+module.exports = Class;
