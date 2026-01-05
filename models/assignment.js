@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const {model, Schema} = mongoose //?
+const {model, Schema} = mongoose 
 
 const assignmentSchema = new Schema({
     title: {
@@ -38,4 +38,5 @@ const Assignment = model('Assignment', assignmentSchema)
 
 
 module.exports = Assignment
+
 

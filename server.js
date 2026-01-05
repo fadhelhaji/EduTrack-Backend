@@ -19,6 +19,7 @@ mongoose.connection.on('connected', () => {
 // controllers
 const authCtrl = require('./controllers/auth');
 const classCtrl = require('./controllers/classes');
+const assignmentCtrl = require('./controllers/assignments')
 
 // middleware
 const verifyToken = require('./middleware/verifyToken');
@@ -38,7 +39,7 @@ app.get('/test', (req, res) => {
 });
 
 app.use('/class', classCtrl);
-
+app.use('/assignment', assignmentCtrl);
 // auth middleware
 app.use(verifyToken);
 // server
