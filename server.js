@@ -41,7 +41,10 @@ app.get('/test', (req, res) => {
 app.use('/class', classCtrl);
 app.use('/assignment', assignmentCtrl);
 // auth middleware
-app.use(verifyToken);
+// app.use(verifyToken);
+
+app.use('/users', userCtrl);
+
 // server
 app.listen(3000, () => {
   console.log('Express is ready');

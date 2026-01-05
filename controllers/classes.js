@@ -1,10 +1,14 @@
 const express = require("express");
 const Class = require("../models/class");
 const router = express.Router();
+const verifyToken = require('../middleware/verifyToken')
 
-router.post("/new", async (req, res) => {
+router.post("/new", verifyToken, async (req, res) => {
   try {
-    const newClass = await Class.create(req.body);
+    const newClass = await Class.create({
+    ...req.body,
+    instructor: req.user._id,
+  });;
     res.status(201).json({ class: newClass });
   } catch (err) {
     console.log(err);
@@ -16,7 +20,8 @@ router.get("/", async (req, res) => {
   try {
     const classes = await Class
       .find({})
-      .populate("student");
+      .populate("instructor", "username role")
+      .populate("student", "username")
       console.log(classes)
 
     res.status(200).json({ classes });
@@ -31,8 +36,8 @@ router.get("/:id", async (req, res) => {
     const { id } = req.params;
     const singleClass = await Class
       .findById(id)
-      .populate("instructor") // remember that scary line in the model ? this gets the whole user object to display it in the front end 
-      .populate("student");
+      .populate("instructor", "username role")
+      .populate("student", "username");
 
     if (!singleClass) {
       res.status(404).json({ err: "Class not found" });
@@ -80,5 +85,6 @@ router.put("/:id/edit", async (req, res) => {
     res.status(500).json({ err: "Failed to update class" });
   }
 });
+
 
 module.exports = router;
