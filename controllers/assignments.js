@@ -12,8 +12,88 @@ router.post("/new", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const assignments = await Assignment
+      .find({})
+      .populate("class")
+      .populate("instructor")
 
+    res.status(200).json({ assignments });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ err: "Failed to get assignments" });
+  }
+});
 
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const singleAssignment = await Assignment
+      .findById(id)
+      .populate("class") 
+      .populate("instructor");
+
+    if (!singleAssignment) {
+      res.status(404).json({ err: "Assignment not found" });
+    } else {
+      res.status(200).json({ assignment: singleAssignment });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ err: "Failed to get Assignment" });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedAssignment = await Assignment.findByIdAndDelete(id);
+
+    if (!deletedAssignment) {
+      res.status(404).json({ err: "Assignment not found" });
+    } else {
+      res.status(200).json({ assignment: deletedAssignment });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ err: "Failed to delete Assignment" });
+  }
+});
+
+router.put("/:id/edit", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedAssignment = await Assignment.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedAssignment) {
+      res.status(404).json({ err: "Assignment not found" });
+    } else {
+      res.status(200).json({ assignment: updatedAssignment });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ err: "Failed to update Assignment" });
+  }
+});
+
+// to make assignment for specific class
+// check tmr 
+router.get("/class/:classId", async (req,res) =>{
+    try {
+        const { classId } = req.params;
+        const assignments = await Assignment.find({ class: classId })
+        .populate("instructor")
+        res.status(200).json({ assignments });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ err: "Failed to get assignments for this class" });
+    }
+})
 
 
 module.exports = router;
