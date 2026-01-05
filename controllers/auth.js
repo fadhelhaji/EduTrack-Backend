@@ -23,8 +23,9 @@ router.post('/sign-up', async (req, res) => {
     const user = await User.create(req.body);
 
     const payload = {
-      username: user.username,
-      _id: user._id,
+      username: userInDatabase.username,
+      _id: userInDatabase._id,
+      role: user.role
     };
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
@@ -58,6 +59,7 @@ router.post('/sign-in', async (req, res) => {
     const payload = {
       username: userInDatabase.username,
       _id: userInDatabase._id,
+      role: userInDatabase.role
     };
 
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);

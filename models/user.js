@@ -11,7 +11,20 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-});
+  role: {
+    type: String,
+    enum: ['Student', 'Instructor'],   
+    default: 'Student',
+    required: true,
+  },
+  employeeId: {
+    type: String,
+    required: function() {
+      return this.role === "instructor"; 
+    }
+  },
+})
+
 
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
