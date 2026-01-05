@@ -1,10 +1,10 @@
 const express = require("express");
-const Classes = require("../models/classes");
+const Class = require("../models/class");
 const router = express.Router();
 
 router.post("/new", async (req, res) => {
   try {
-    const newClass = await Classes.create(req.body);
+    const newClass = await Class.create(req.body);
     res.status(201).json({ class: newClass });
   } catch (err) {
     console.log(err);
@@ -14,10 +14,10 @@ router.post("/new", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const classes = await Classes
+    const classes = await Class
       .find({})
-      .populate("instructor")
       .populate("student");
+      console.log(classes)
 
     res.status(200).json({ classes });
   } catch (err) {
@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const singleClass = await Classes
+    const singleClass = await Class
       .findById(id)
       .populate("instructor") // remember that scary line in the model ? this gets the whole user object to display it in the front end 
       .populate("student");
@@ -48,7 +48,7 @@ router.get("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedClass = await Classes.findByIdAndDelete(id);
+    const deletedClass = await Class.findByIdAndDelete(id);
 
     if (!deletedClass) {
       res.status(404).json({ err: "Class not found" });
@@ -64,7 +64,7 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id/edit", async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedClass = await Classes.findByIdAndUpdate(
+    const updatedClass = await Class.findByIdAndUpdate(
       id,
       req.body,
       { new: true }
