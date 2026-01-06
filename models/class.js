@@ -32,6 +32,6 @@ student: [
   
 });
 
-const Class = mongoose.model('Classes', classSchema);
+const Class = mongoose.model('Class', classSchema);
 
 module.exports = Class;

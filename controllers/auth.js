@@ -5,7 +5,6 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { use } = require('react');
 
 router.post('/sign-up', async (req, res) => {
   try {
