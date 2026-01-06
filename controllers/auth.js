@@ -5,6 +5,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { use } = require('react');
 
 router.post('/sign-up', async (req, res) => {
   try {
@@ -23,8 +24,10 @@ router.post('/sign-up', async (req, res) => {
     const user = await User.create(req.body);
 
     const payload = {
-      username: userInDatabase.username,
-      _id: userInDatabase._id,
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      _id: user._id,
       role: user.role
     };
 
@@ -58,6 +61,8 @@ router.post('/sign-in', async (req, res) => {
 
     const payload = {
       username: userInDatabase.username,
+      firstName: userInDatabase.firstName,
+      lastName: userInDatabase.lastName,
       _id: userInDatabase._id,
       role: userInDatabase.role
     };
