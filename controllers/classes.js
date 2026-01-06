@@ -20,8 +20,8 @@ router.get("/", async (req, res) => {
   try {
     const classes = await Class
       .find({})
-      .populate("instructor", "username role")
-      .populate("student", "username")
+      // .populate("instructor")
+      // .populate("student")
       console.log(classes)
 
     res.status(200).json({ classes });

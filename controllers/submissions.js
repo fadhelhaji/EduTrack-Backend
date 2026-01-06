@@ -16,9 +16,10 @@ router.get("/", async (req, res) => {
   try {
     const submissions = await Submission
       .find({})
-      .populate("class")
-      .populate("instructor")
-      .populate("student");
+      //.populate("class")      this is wrong it dosent match the model
+      //.populate("instructor") this is wrong it dosent match the model
+      .populate("student")
+      .populate("assignment");
 
     res.status(200).json({ submissions });
   } catch (err) {
@@ -32,9 +33,10 @@ router.get("/:id", async (req, res) => {
     const { id } = req.params;
     const submission = await Submission
       .findById(id)
-      .populate("class")
-      .populate("instructor")
-      .populate("student");
+      //.populate("class")    this is wrong it dosent match the model
+      //.populate("instructor")     this is wrong it dosent match the model
+      .populate("student")
+      .populate("assignment");
 
     if (!submission) {
       res.status(404).json({ err: "Submission not found" });

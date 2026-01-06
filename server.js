@@ -22,7 +22,7 @@ const classCtrl = require('./controllers/classes');
 const assignmentCtrl = require('./controllers/assignments')
 
 // middleware
-const verifyToken = require('./middleware/verifyToken');
+// const verifyToken = require('./middleware/verifyToken');
 
 // global middleware
 app.use(cors());
@@ -43,7 +43,6 @@ app.use('/assignment', assignmentCtrl);
 // auth middleware
 // app.use(verifyToken);
 
-app.use('/users', userCtrl);
 
 // server
 app.listen(3000, () => {
