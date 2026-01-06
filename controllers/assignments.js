@@ -97,7 +97,7 @@ router.put("/:id/edit", async (req, res) => {
             const submissions = await Submission.find({assignment: id}).populate("student")
             res.status(200).json(submissions)
         } catch (err) {
-            onsole.log(err);
+            console.log(err);
     res.status(500).json({ err: "Failed to fetch submissions for this assignment" });
         }
       })
