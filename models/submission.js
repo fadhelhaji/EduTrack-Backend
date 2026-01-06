@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const {model, Schema} = mongoose 
 
-const submissionSchema = new Schema({
+const submissionSchema = new mongoose.Schema({
   githubUrl: {
     type: String,
     required: true,
