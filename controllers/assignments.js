@@ -20,7 +20,6 @@ router.get("/", async (req, res) => {
   try {
     const assignments = await Assignment
       .find({})
-      .populate("class")
       .populate("instructor")
 
     res.status(200).json({ assignments });

@@ -35,17 +35,17 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const assignments = await Assignment.find({class:id})
-    console.log(assignments)
     const singleClass = await Class
       .findById(id)
       .populate("instructor", "username role")
       .populate("student", "username")
+      .populate("assignment")
+      console.log(singleClass)
       
       if (!singleClass) {
         res.status(404).json({ err: "Class not found" });
       } else {
-        res.status(200).json({ class: singleClass , assignments: assignments});
+        res.status(200).json({ class: singleClass });
       }
   } catch (err) {
     console.log(err);

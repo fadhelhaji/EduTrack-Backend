@@ -18,11 +18,6 @@ const assignmentSchema = new Schema({
         type: Number,
         required: true,
     },
-    class: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'Class',
-        required: true,
-    },
     instructor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
