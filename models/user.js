@@ -28,6 +28,7 @@ const userSchema = mongoose.Schema({
     default: 'Student',
     required: true,
   },
+  
   employeeId: {
     type: String,
     required: function() {
