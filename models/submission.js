@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Assignment = require('./assignment');
 
 const submissionSchema = mongoose.Schema({
   githubUrl: {
@@ -17,6 +18,20 @@ const submissionSchema = mongoose.Schema({
       required: true,
     }
   ],
+
+  Grade:[
+    {
+      type:Number,
+      required:true
+    }
+  ],
+  assignment:[
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Assignment',
+      required:true
+    }
+  ]
 });
 
 
