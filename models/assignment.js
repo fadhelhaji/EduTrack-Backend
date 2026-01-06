@@ -20,7 +20,7 @@ const assignmentSchema = new Schema({
     },
     class: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Classes',
+        ref:'Class',
         required: true,
     },
     instructor: {

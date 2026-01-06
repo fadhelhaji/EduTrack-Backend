@@ -2,6 +2,7 @@ const express = require("express");
 const Class = require("../models/class");
 const router = express.Router();
 const verifyToken = require('../middleware/verifyToken')
+const Assignment = require('../models/assignment')
 
 router.post("/new", verifyToken, async (req, res) => {
   try {
@@ -34,16 +35,18 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    const assignments = await Assignment.find({class:id})
+    console.log(assignments)
     const singleClass = await Class
       .findById(id)
       .populate("instructor", "username role")
-      .populate("student", "username");
-
-    if (!singleClass) {
-      res.status(404).json({ err: "Class not found" });
-    } else {
-      res.status(200).json({ class: singleClass });
-    }
+      .populate("student", "username")
+      
+      if (!singleClass) {
+        res.status(404).json({ err: "Class not found" });
+      } else {
+        res.status(200).json({ class: singleClass , assignments: assignments});
+      }
   } catch (err) {
     console.log(err);
     res.status(500).json({ err: "Failed to get class" });

@@ -1,9 +1,13 @@
 const express = require("express");
 const Assignment = require("../models/assignment");
 const router = express.Router();
+const verifyToken = require('../middleware/verifyToken')
 
-router.post("/new", async (req, res) => {
+router.post("/new", verifyToken, async (req, res) => {
   try {
+    req.body.instructor = req.user
+    console.log(req.user)
+    console.log(req.body)
     const newAssignment = await Assignment.create(req.body);
     res.status(201).json({ assignment: newAssignment });
   } catch (err) {
@@ -83,17 +87,8 @@ router.put("/:id/edit", async (req, res) => {
 
 // to make assignment for specific class
 // check tmr 
-router.get("/class/:classId", async (req,res) =>{
-    try {
-        const { classId } = req.params;
-        const assignments = await Assignment.find({ class: classId })
-        .populate("instructor")
-        res.status(200).json({ assignments });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ err: "Failed to get assignments for this class" });
-    }
-})
+      // const assignments = await Assignment.find({ class: id })
+      // res.status(200).json({ assignments });
 
 
 module.exports = router;
