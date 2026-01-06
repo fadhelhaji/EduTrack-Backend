@@ -5,7 +5,7 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const submission = await Submission.create(req.body);
-    res.status(201).json({ submission });
+    res.status(201).json( submission );
   } catch (err) {
     console.log(err);
     res.status(500).json({ err: "Failed to create submission" });

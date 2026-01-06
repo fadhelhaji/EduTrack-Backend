@@ -1,5 +1,6 @@
 const express = require("express");
 const Assignment = require("../models/assignment");
+const Submission = require('../models/submission');
 const router = express.Router();
 const verifyToken = require('../middleware/verifyToken')
 
@@ -89,5 +90,15 @@ router.put("/:id/edit", async (req, res) => {
       // const assignments = await Assignment.find({ class: id })
       // res.status(200).json({ assignments });
 
+      router.get('/:id/submissions' , async (req, res)=>{
+        try {
+            const {id} = req.params;
+            const submissions = await Submission.find({assignment: id}).populate("student")
+            res.status(200).json(submissions)
+        } catch (err) {
+            console.log(err);
+    res.status(500).json({ err: "Failed to fetch submissions for this assignment" });
+        }
+      })
 
 module.exports = router;

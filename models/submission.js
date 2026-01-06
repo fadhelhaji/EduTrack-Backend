@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Assignment = require('./assignment');
+const {model, Schema} = mongoose 
 
-const submissionSchema = mongoose.Schema({
+const submissionSchema = new Schema({
   githubUrl: {
     type: String,
     required: true,
@@ -11,29 +11,30 @@ const submissionSchema = mongoose.Schema({
     type: String
   },
 
-  student: [
+  student: 
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     }
-  ],
+  ,
 
-  Grade:[
+  grade:
     {
       type:Number,
-      required:true
+      default:0,
     }
-  ],
-  assignment:[
+  ,
+  assignment:
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Assignment',
       required:true
     }
-  ]
-});
+  
+}, { timestamps: true });
 
+submissionSchema.index({ student: 1, assignment: 1 }, { unique: true });
 
 const Submission = mongoose.model('Submission', submissionSchema);
 
