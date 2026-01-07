@@ -3,6 +3,7 @@ const Class = require("../models/class");
 const router = express.Router();
 const verifyToken = require('../middleware/verifyToken')
 const Assignment = require('../models/assignment')
+const User = require('../models/user')
 
 router.post("/new", verifyToken, async (req, res) => {
   try {
@@ -35,23 +36,37 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    const assignment = await Assignment.find({class: id})
+    const student = await User.find({role: 'Student'})
     const singleClass = await Class
       .findById(id)
       .populate("instructor", "username role")
       .populate("student", "username")
-      .populate("assignment")
+      // .populate("assignment")
       console.log(singleClass)
       
       if (!singleClass) {
         res.status(404).json({ err: "Class not found" });
       } else {
-        res.status(200).json({ class: singleClass });
+        res.status(200).json({ class: singleClass, assignment: assignment, student: student});
       }
   } catch (err) {
     console.log(err);
     res.status(500).json({ err: "Failed to get class" });
   }
 });
+
+router.post('/:id/assignment/new', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const assignment = await Assignment.create({
+      ...req.body,
+       class: id})
+    res.status(201).json({ assignment: assignment })
+  } catch (error) {
+    res.status(500).json({error: "Could not create"})
+  }
+})
 
 router.delete("/:id", async (req, res) => {
   try {

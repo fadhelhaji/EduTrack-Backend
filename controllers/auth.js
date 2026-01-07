@@ -5,6 +5,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const verifyToken = require('../middleware/verifyToken');
 
 router.post('/sign-up', async (req, res) => {
   try {
@@ -75,5 +76,46 @@ router.post('/sign-in', async (req, res) => {
     res.status(500).json({ err: err.message });
   }
 });
+
+router.get('/students', async (req, res)=>{
+  try {
+    const students = await User.find({role: 'Student'})
+    console.log(students)
+    res.status(200).json({students: students})
+  } catch (error) {
+    res.status(500).json({error: "Could not fetch students"})
+  }
+})
+
+router.get('/students/:id', async (req, res)=>{
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id)
+    console.log(user)
+    res.status(200).json({user: user})
+  } catch (error) {
+    res.status(500).json({error: "Could not fetch user information"})
+  }
+})
+
+router.put('/students/:id/edit', async (req, res) => {
+  try {
+    // console.log('test')
+    const {id} = req.params
+
+    // if (req.user.role !== 'Instructor') {
+    //   req.body.role = student.role
+    //   delete req.body.employeeId
+    // }
+    // console.log('testtttttttttttt')
+    const updatedStudent = await User.findByIdAndUpdate(id, req.body,{ new: true});
+    console.log(updatedStudent)
+    res.status(200).json({ student: updatedStudent });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'Could not update student' });
+  }
+});
+
 
 module.exports = router;
