@@ -33,5 +33,5 @@ student: [
 });
 
 const Class = mongoose.model('Class', classSchema);
-
+ 
 module.exports = Class;

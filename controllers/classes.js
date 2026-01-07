@@ -38,17 +38,22 @@ router.get("/:id", async (req, res) => {
     const { id } = req.params;
     const assignment = await Assignment.find({class: id})
     const student = await User.find({role: 'Student'})
+    const availableStudents = student.filter(s => !s.class);
+
+    const classStudents = student.filter(
+      s => s.class?.toString() === id
+    );
+
     const singleClass = await Class
       .findById(id)
       .populate("instructor", "username role")
-      .populate("student", "username")
-      // .populate("assignment")
       console.log(singleClass)
+
       
       if (!singleClass) {
         res.status(404).json({ err: "Class not found" });
       } else {
-        res.status(200).json({ class: singleClass, assignment: assignment, student: student});
+        res.status(200).json({ class: singleClass, assignment: assignment, student: student, availableStudents: availableStudents, classStudents: classStudents});
       }
   } catch (err) {
     console.log(err);
@@ -103,6 +108,7 @@ router.put("/:id/edit", async (req, res) => {
     res.status(500).json({ err: "Failed to update class" });
   }
 });
+
 
 
 module.exports = router;
