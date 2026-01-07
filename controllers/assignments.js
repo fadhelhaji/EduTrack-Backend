@@ -35,7 +35,7 @@ router.get("/:id", async (req, res) => {
     const { id } = req.params;
     const singleAssignment = await Assignment
       .findById(id)
-    //   .populate("class") since there is no class ref anymore
+      //   .populate("class") since there is no class ref anymore
       .populate("instructor");
 
     if (!singleAssignment) {
@@ -85,20 +85,15 @@ router.put("/:id/edit", async (req, res) => {
   }
 });
 
-// to make assignment for specific class
-// check tmr 
-      // const assignments = await Assignment.find({ class: id })
-      // res.status(200).json({ assignments });
-
-      router.get('/:id/submissions' , async (req, res)=>{
-        try {
-            const {id} = req.params;
-            const submissions = await Submission.find({assignment: id}).populate("student")
-            res.status(200).json(submissions)
-        } catch (err) {
-            console.log(err);
+router.get('/:id/submissions', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const submissions = await Submission.find({ assignment: id }).populate("student")
+    res.status(200).json(submissions)
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ err: "Failed to fetch submissions for this assignment" });
-        }
-      })
+  }
+})
 
 module.exports = router;
