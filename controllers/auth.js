@@ -76,4 +76,14 @@ router.post('/sign-in', async (req, res) => {
   }
 });
 
+router.get('/students', async (req, res)=>{
+  try {
+    const students = await User.find({role: 'Student'})
+    console.log(students)
+    res.status(200).json({students: students})
+  } catch (error) {
+    res.status(500).json({error: "Could not fetch students"})
+  }
+})
+
 module.exports = router;

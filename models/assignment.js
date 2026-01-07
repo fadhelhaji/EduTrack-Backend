@@ -21,8 +21,17 @@ const assignmentSchema = new Schema({
     instructor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
     },
+    submission: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Submission',
+        }
+    ],
+    class: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Assignment',
+    }
     
 
 }, 

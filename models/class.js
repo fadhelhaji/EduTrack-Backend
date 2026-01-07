@@ -29,12 +29,6 @@ student: [
       ref: 'User',
     }
   ],
-  assignment: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Assignment'
-    }
-  ]
   
 });
 
