@@ -18,7 +18,7 @@ router.get('/my-assignments',verifyToken,async(req,res)=>{
 
 
   const myAssignments = await Assignment.find({class: req.user})
-  res.json(assignments)
+  res.json({assignments})
 })
 
 router.post("/new", verifyToken, async (req, res) => {
