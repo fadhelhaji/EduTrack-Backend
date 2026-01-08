@@ -22,7 +22,6 @@ const submissionSchema = new mongoose.Schema({
       ref: 'Assignment',
       required:true
     }
-  
 }, { timestamps: true });
 
 submissionSchema.index({ student: 1, assignment: 1 }, { unique: true });
