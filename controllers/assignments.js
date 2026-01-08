@@ -2,7 +2,24 @@ const express = require("express");
 const Assignment = require("../models/assignment");
 const Submission = require('../models/submission');
 const router = express.Router();
-const verifyToken = require('../middleware/verifyToken')
+const verifyToken = require('../middleware/verifyToken');
+const User = require("../models/user");
+const Class = require("../models/class");
+
+
+
+
+router.get('/my-assignments',verifyToken,async(req,res)=>{
+  console.log('in my assignments')
+  const allClasses = await Class.find()
+  const myClass = allClasses.find((oneClass)=> oneClass.student.includes(req.user._id))
+  const assignments = await Assignment.find({class: myClass._id})
+  
+
+
+  const myAssignments = await Assignment.find({class: req.user})
+  res.json({assignments})
+})
 
 router.post("/new", verifyToken, async (req, res) => {
   try {
