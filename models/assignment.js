@@ -22,7 +22,8 @@ const assignmentSchema = new Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Submission',
-            unique: true
+            unique: true,
+            partialFilterExpression: { submission: { $ne: null } }
         }
     ,
     class: {
