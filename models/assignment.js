@@ -22,12 +22,13 @@ const assignmentSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    submission: [
+    submission: 
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Submission',
+            unique: true
         }
-    ],
+    ,
     class: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Assignment',
