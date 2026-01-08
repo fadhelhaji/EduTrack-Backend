@@ -26,7 +26,16 @@ router.post("/new", verifyToken, async (req, res) => {
     req.body.instructor = req.user
     console.log(req.user)
     console.log(req.body)
-    const newAssignment = await Assignment.create(req.body);
+    let deadline = new Date(req.body.deadline);
+
+    // Set the last submission time to 1 minute before midnight
+    deadline.setHours(23, 59, 0, 0); 
+
+    const assignment = await Assignment.create({
+      ...req.body,
+      deadline, // save the adjusted deadline
+    });
+    // const newAssignment = await Assignment.create(req.body);
     res.status(201).json({ assignment: newAssignment });
   } catch (err) {
     console.log(err);

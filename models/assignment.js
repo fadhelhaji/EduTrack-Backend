@@ -14,10 +14,6 @@ const assignmentSchema = new Schema({
         type: Date,
         required: true,
     },
-    totalGrade: {
-        type: Number,
-        required: true,
-    },
     instructor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

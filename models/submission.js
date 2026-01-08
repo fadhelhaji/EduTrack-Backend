@@ -15,15 +15,7 @@ const submissionSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-    }
-  ,
-
-  grade:
-    {
-      type:Number,
-      default:0,
-    }
-  ,
+    },
   assignment:
     {
       type: mongoose.Schema.Types.ObjectId,
