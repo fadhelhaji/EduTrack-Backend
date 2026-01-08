@@ -34,15 +34,9 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-
-    // Assignments
     const assignment = await Assignment.find({ class: id });
-
-    // Students
     const availableStudents = await User.find({ role: 'Student', class: null }, "username _id");
     const classStudents = await User.find({ role: 'Student', class: id }, "username _id");
-
-    // Class info
     const singleClass = await Class.findById(id)
     .populate("instructor", "username role");
 
@@ -118,33 +112,22 @@ router.put("/:id/edit", async (req, res) => {
 router.put('/:id/add-student/:studentId', verifyToken, async (req, res) => {
   try {
     const { id, studentId } = req.params;
-
-    // Find the class
     const cls = await Class.findById(id);
     if (!cls) return res.status(404).json({ error: 'Class not found' });
-
-    // Find the student
     const student = await User.findById(studentId);
     if (!student) return res.status(404).json({ error: 'Student not found' });
-
-    // Validate required fields
     if (!student.firstName || !student.lastName) {
       return res.status(400).json({ error: 'Student must have firstName and lastName' });
     }
-
-    // Assign the class to the student if not already assigned
     if (!student.class || student.class.toString() !== cls._id.toString()) {
       student.class = cls._id;
-      await student.save(); // Save student with updated class
+      await student.save();
     }
-
-    // Add student to class array if not already included
     if (!cls.student) cls.student = [];
     if (!cls.student.some(sId => sId.toString() === student._id.toString())) {
       cls.student.push(student._id);
-      await cls.save(); // Save class with updated student array
+      await cls.save();
     }
-
     res.status(200).json({ message: 'Student added successfully', class: cls, student });
   } catch (error) {
     console.error('Add student error:', error);
@@ -155,29 +138,40 @@ router.put('/:id/add-student/:studentId', verifyToken, async (req, res) => {
 router.put('/:id/remove-student/:studentId', verifyToken, async (req, res) => {
   try {
     const { id, studentId } = req.params;
-
-    // Find class
     const cls = await Class.findById(id);
     if (!cls) return res.status(404).json({ error: 'Class not found' });
-
-    // Find student
     const student = await User.findById(studentId);
     if (!student) return res.status(404).json({ error: 'Student not found' });
-
-    // Remove student's class
     student.class = null;
     await student.save();
-
-    // Remove student from class array
     cls.student = cls.student.filter(sId => sId.toString() !== student._id.toString());
     await cls.save();
-
     res.status(200).json({ message: 'Student removed successfully', class: cls, student });
   } catch (error) {
     console.error('Remove student error:', error);
     res.status(500).json({ error: 'Could not remove student' });
   }
 });
+
+router.get("/:classId/assignment/:assignmentId", async (req, res) => {
+  try {
+    const { classId, assignmentId } = req.params;
+
+    const assignment = await Assignment.findOne({
+      _id: assignmentId,
+      class: classId
+    });
+
+    if (!assignment) {
+      return res.status(404).json({ message: "Assignment not found" });
+    }
+
+    res.json({ assignment });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch assignment" });
+  }
+});
+
 
 
 

@@ -30,12 +30,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:assignmentId", async (req, res) => {
   try {
-    const { id } = req.params;
+    const { assignmentId } = req.params;
     const singleAssignment = await Assignment
       .findById(id)
-      //   .populate("class") since there is no class ref anymore
       .populate("instructor");
 
     if (!singleAssignment) {
