@@ -100,14 +100,7 @@ router.get('/students/:id', async (req, res)=>{
 
 router.put('/students/:id/edit', async (req, res) => {
   try {
-    // console.log('test')
     const {id} = req.params
-
-    // if (req.user.role !== 'Instructor') {
-    //   req.body.role = student.role
-    //   delete req.body.employeeId
-    // }
-    // console.log('testtttttttttttt')
     const updatedStudent = await User.findByIdAndUpdate(id, req.body,{ new: true});
     console.log(updatedStudent)
     res.status(200).json({ student: updatedStudent });

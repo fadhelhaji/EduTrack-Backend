@@ -35,6 +35,11 @@ const userSchema = mongoose.Schema({
       return this.role === "instructor"; 
     }
   },
+  class: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Class',
+    default: null
+  }
 })
 
 

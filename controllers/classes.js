@@ -22,8 +22,6 @@ router.get("/", async (req, res) => {
   try {
     const classes = await Class
       .find({})
-      // .populate("instructor")
-      // .populate("student")
       console.log(classes)
 
     res.status(200).json({ classes });
@@ -36,25 +34,38 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const assignment = await Assignment.find({class: id})
-    const student = await User.find({role: 'Student'})
-    const singleClass = await Class
-      .findById(id)
-      .populate("instructor", "username role")
-      .populate("student", "username")
-      // .populate("assignment")
-      console.log(singleClass)
-      
-      if (!singleClass) {
-        res.status(404).json({ err: "Class not found" });
-      } else {
-        res.status(200).json({ class: singleClass, assignment: assignment, student: student});
-      }
+
+    // Assignments
+    const assignment = await Assignment.find({ class: id });
+
+    // Students
+    const availableStudents = await User.find({ role: 'Student', class: null }, "username _id");
+    const classStudents = await User.find({ role: 'Student', class: id }, "username _id");
+
+    // Class info
+    const singleClass = await Class.findById(id)
+    .populate("instructor", "username role");
+
+    console.log("Class found:", singleClass);
+    console.log("Class Students:", classStudents);
+    console.log("Available Students:", availableStudents);
+
+    if (!singleClass) {
+      return res.status(404).json({ err: "Class not found" });
+    }
+
+    res.status(200).json({
+      class: singleClass,
+      assignment,
+      availableStudents,
+      classStudents
+    });
   } catch (err) {
-    console.log(err);
+    console.log("Get class error:", err);
     res.status(500).json({ err: "Failed to get class" });
   }
 });
+
 
 router.post('/:id/assignment/new', async (req, res) => {
   try {
@@ -103,6 +114,76 @@ router.put("/:id/edit", async (req, res) => {
     res.status(500).json({ err: "Failed to update class" });
   }
 });
+
+router.put('/:id/add-student/:studentId', verifyToken, async (req, res) => {
+  try {
+    const { id, studentId } = req.params;
+
+    // Find the class
+    const cls = await Class.findById(id);
+    if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+    // Find the student
+    const student = await User.findById(studentId);
+    if (!student) return res.status(404).json({ error: 'Student not found' });
+
+    // Validate required fields
+    if (!student.firstName || !student.lastName) {
+      return res.status(400).json({ error: 'Student must have firstName and lastName' });
+    }
+
+    // Assign the class to the student if not already assigned
+    if (!student.class || student.class.toString() !== cls._id.toString()) {
+      student.class = cls._id;
+      await student.save(); // Save student with updated class
+    }
+
+    // Add student to class array if not already included
+    if (!cls.student) cls.student = [];
+    if (!cls.student.some(sId => sId.toString() === student._id.toString())) {
+      cls.student.push(student._id);
+      await cls.save(); // Save class with updated student array
+    }
+
+    res.status(200).json({ message: 'Student added successfully', class: cls, student });
+  } catch (error) {
+    console.error('Add student error:', error);
+    res.status(500).json({ error: 'Could not add student' });
+  }
+});
+
+router.put('/:id/remove-student/:studentId', verifyToken, async (req, res) => {
+  try {
+    const { id, studentId } = req.params;
+
+    // Find class
+    const cls = await Class.findById(id);
+    if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+    // Find student
+    const student = await User.findById(studentId);
+    if (!student) return res.status(404).json({ error: 'Student not found' });
+
+    // Remove student's class
+    student.class = null;
+    await student.save();
+
+    // Remove student from class array
+    cls.student = cls.student.filter(sId => sId.toString() !== student._id.toString());
+    await cls.save();
+
+    res.status(200).json({ message: 'Student removed successfully', class: cls, student });
+  } catch (error) {
+    console.error('Remove student error:', error);
+    res.status(500).json({ error: 'Could not remove student' });
+  }
+});
+
+
+
+
+
+
 
 
 module.exports = router;
