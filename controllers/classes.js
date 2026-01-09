@@ -63,12 +63,13 @@ router.get("/:id", verifyToken, async (req, res) => {
 });
 
 
-router.post('/:id/assignment/new', async (req, res) => {
+router.post('/:id/assignment/new',verifyToken, async (req, res) => {
   try {
-    const { id } = req.params;
     const assignment = await Assignment.create({
       ...req.body,
-       class: id})
+       class:req.params.id, // to get assignment by class id 
+      instructor: req.user._id // to show in all assignment
+      });
     res.status(201).json({ assignment: assignment })
   } catch (error) {
     res.status(500).json({error: "Could not create"})
