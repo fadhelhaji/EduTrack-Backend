@@ -17,6 +17,7 @@ const assignmentSchema = new Schema({
     instructor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: true
     },
     submission: 
         {
@@ -28,7 +29,7 @@ const assignmentSchema = new Schema({
     ,
     class: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Assignment',
+            ref: 'Class', //ref was wrong
     }
     
 

@@ -10,15 +10,21 @@ const Class = require("../models/class");
 
 
 router.get('/my-assignments',verifyToken,async(req,res)=>{
-  console.log('in my assignments')
-  const allClasses = await Class.find()
-  const myClass = allClasses.find((oneClass)=> oneClass.student.includes(req.user._id))
-  const assignments = await Assignment.find({class: myClass._id})
-  
-
-
-  const myAssignments = await Assignment.find({class: req.user})
-  res.json({assignments})
+  // console.log('in my assignments')
+  // const allClasses = await Class.find()
+  // const myClass = allClasses.find((oneClass)=> oneClass.student.includes(req.user._id))
+  // const assignments = await Assignment.find({class: myClass._id}) 
+try {
+  const studentClass = await Class.findOne({ student: req.user._id });
+      if (!studentClass) {
+        return res.json({ assignments: [] });
+      }
+    const assignments = await Assignment.find({ class: studentClass._id }).populate("class");
+    res.json({assignments})
+} catch (err) {
+  console.log(err);
+    res.status(500).json({ err: "Failed to fetch student assignments" });
+}
 })
 
 router.post("/new", verifyToken, async (req, res) => {
@@ -36,18 +42,18 @@ router.post("/new", verifyToken, async (req, res) => {
       deadline, // save the adjusted deadline
     });
     // const newAssignment = await Assignment.create(req.body);
-    res.status(201).json({ assignment: newAssignment });
+    res.status(201).json({ assignment });
   } catch (err) {
     console.log(err);
     res.status(500).json({ err: "Failed to create assignment" });
   }
 });
 
-router.get("/", async (req, res) => {
+// to get only what instructor made
+router.get("/", verifyToken, async (req, res) => {
   try {
     const assignments = await Assignment
-      .find({})
-      .populate("instructor")
+      .find({instructor: req.user._id}).populate("class");
 
     res.status(200).json({ assignments });
   } catch (err) {
@@ -56,9 +62,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:assignmentId", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const { assignmentId } = req.params;
+    const { id } = req.params;
     const singleAssignment = await Assignment
       .findById(id)
       .populate("instructor");

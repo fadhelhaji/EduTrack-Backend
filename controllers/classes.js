@@ -18,20 +18,22 @@ router.post("/new", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+// pass token for instructor id(filter for only classes created by instructor)
+router.get("/", verifyToken, async (req, res) => {
   try {
     const classes = await Class
-      .find({})
-      console.log(classes)
+      .find({instructor: req.user._id}) // to get classes by only the user
+    console.log("Classes found for instructor:", classes);
 
     res.status(200).json({ classes });
   } catch (err) {
-    console.log(err);
+    console.log("Error in GET /class:", err);
     res.status(500).json({ err: "Failed to get classes" });
   }
 });
 
-router.get("/:id", async (req, res) => {
+// token needed here as well 
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     const assignment = await Assignment.find({ class: id });
@@ -61,12 +63,13 @@ router.get("/:id", async (req, res) => {
 });
 
 
-router.post('/:id/assignment/new', async (req, res) => {
+router.post('/:id/assignment/new',verifyToken, async (req, res) => {
   try {
-    const { id } = req.params;
     const assignment = await Assignment.create({
       ...req.body,
-       class: id})
+       class:req.params.id, // to get assignment by class id 
+      instructor: req.user._id // to show in all assignment
+      });
     res.status(201).json({ assignment: assignment })
   } catch (error) {
     res.status(500).json({error: "Could not create"})
