@@ -8,7 +8,7 @@ const classSchema = mongoose.Schema({
 
   program: {
     type: String,
-    enum: ['SEB', 'UI-UX', 'Java'],
+    enum: ['SEB', 'UI-UX', 'Java', 'DS', 'DA'],
     required: true,
   },
 
