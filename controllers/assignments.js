@@ -13,8 +13,7 @@ router.get('/my-assignments',verifyToken,async(req,res)=>{
   // console.log('in my assignments')
   // const allClasses = await Class.find()
   // const myClass = allClasses.find((oneClass)=> oneClass.student.includes(req.user._id))
-  // const assignments = await Assignment.find({class: myClass._id})
-  
+  // const assignments = await Assignment.find({class: myClass._id}) 
 try {
   const studentClass = await Class.findOne({ student: req.user._id });
       if (!studentClass) {
