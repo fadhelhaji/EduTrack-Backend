@@ -8,9 +8,9 @@ const User = require('../models/user')
 router.post("/new", verifyToken, async (req, res) => {
   try {
     const newClass = await Class.create({
-    ...req.body,
-    instructor: req.user._id,
-  });;
+      ...req.body,
+      instructor: req.user._id,
+    });;
     res.status(201).json({ class: newClass });
   } catch (err) {
     console.log(err);
@@ -22,7 +22,7 @@ router.post("/new", verifyToken, async (req, res) => {
 router.get("/", verifyToken, async (req, res) => {
   try {
     const classes = await Class
-      .find({instructor: req.user._id}) // to get classes by only the user
+      .find({ instructor: req.user._id }) // to get classes by only the user
     console.log("Classes found for instructor:", classes);
 
     res.status(200).json({ classes });
@@ -40,7 +40,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     const availableStudents = await User.find({ role: 'Student', class: null }, "username _id");
     const classStudents = await User.find({ role: 'Student', class: id }, "username _id");
     const singleClass = await Class.findById(id)
-    .populate("instructor", "username role");
+      .populate("instructor", "username role");
 
     console.log("Class found:", singleClass);
     console.log("Class Students:", classStudents);
@@ -63,16 +63,16 @@ router.get("/:id", verifyToken, async (req, res) => {
 });
 
 
-router.post('/:id/assignment/new',verifyToken, async (req, res) => {
+router.post('/:id/assignment/new', verifyToken, async (req, res) => {
   try {
     const assignment = await Assignment.create({
       ...req.body,
-       class:req.params.id, // to get assignment by class id 
+      class: req.params.id, // to get assignment by class id 
       instructor: req.user._id // to show in all assignment
-      });
+    });
     res.status(201).json({ assignment: assignment })
   } catch (error) {
-    res.status(500).json({error: "Could not create"})
+    res.status(500).json({ error: "Could not create" })
   }
 })
 
@@ -174,7 +174,6 @@ router.get("/:classId/assignment/:assignmentId", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch assignment" });
   }
 });
-
 
 
 

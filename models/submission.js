@@ -21,7 +21,12 @@ const submissionSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Assignment',
       required:true
-    }
+    },
+  class:
+  {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Class',
+  }
   
 }, { timestamps: true });
 

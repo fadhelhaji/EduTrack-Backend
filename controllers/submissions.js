@@ -1,16 +1,47 @@
 const express = require("express");
 const Submission = require("../models/submission");
 const router = express.Router();
+const User = require("../models/user");
+const Assignment = require("../models/assignment");
+const sendEmail = require("../utilities/sendEmail");
+const verifyToken = require("../middleware/verifyToken");
 
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
+    if (req.user.role !== "Student") {
+      return res.status(403).json({ err: "Only students can submit assignments" });
+    }
+    req.body.student = req.user._id;
+    const assignment = await Assignment.findById(req.body.assignment).populate("class");
+    if (!assignment) return res.status(404).json({ err: "Assignment not found" });
+    req.body.class = assignment.class?._id;
     const submission = await Submission.create(req.body);
-    res.status(201).json( submission );
+    const student = await User.findById(req.body.student);
+
+    if (student?.email) {
+      await sendEmail({
+        to: student.email,
+        subject: "Assignment Submitted Successfully",
+        html: `
+          <h2>Submission Confirmed</h2>
+          <p>You have successfully submitted:</p>
+          <p><strong>Assignment:</strong> ${assignment.title}</p>
+          <p><strong>Deadline:</strong> ${new Date(assignment.deadline).toLocaleDateString()}</p>
+          <hr />
+          <p><strong>GitHub:</strong> ${req.body.githubUrl}</p>
+          <p><strong>Notes:</strong> ${req.body.notes || "None"}</p>
+          <br />
+          <p>Good luck!</p>
+        `,
+      });
+    }
+    res.status(201).json(submission);
   } catch (err) {
     console.log(err);
     res.status(500).json({ err: "Failed to create submission" });
   }
 });
+
 
 router.get("/", async (req, res) => {
   try {
@@ -19,7 +50,8 @@ router.get("/", async (req, res) => {
       //.populate("class")      this is wrong it dosent match the model
       //.populate("instructor") this is wrong it dosent match the model
       .populate("student")
-      .populate("assignment");
+      .populate("assignment")
+      .populate("class", "className");
 
     res.status(200).json({ submissions });
   } catch (err) {
@@ -36,7 +68,9 @@ router.get("/:id", async (req, res) => {
       //.populate("class")    this is wrong it dosent match the model
       //.populate("instructor")     this is wrong it dosent match the model
       .populate("student")
-      .populate("assignment");
+      .populate("assignment")
+      .populate("class", "className");
+
 
     if (!submission) {
       res.status(404).json({ err: "Submission not found" });

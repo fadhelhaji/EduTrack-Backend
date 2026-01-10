@@ -12,27 +12,33 @@ const userSchema = mongoose.Schema({
     required: true,
   },
 
-  firstName:{
+  firstName: {
     type: String,
     required: true,
   },
 
-  lastName:{
+  lastName: {
     type: String,
     required: true,
+  },
+
+  email: {
+    type: String,
+    required: true,
+    unique: true,
   },
 
   role: {
     type: String,
-    enum: ['Student', 'Instructor'],   
+    enum: ['Student', 'Instructor'],
     default: 'Student',
     required: true,
   },
-  
+
   employeeId: {
     type: String,
-    required: function() {
-      return this.role === "instructor"; 
+    required: function () {
+      return this.role === "instructor";
     }
   },
   class: {
