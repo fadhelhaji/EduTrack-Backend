@@ -23,11 +23,9 @@ router.get("/", verifyToken, async (req, res) => {
   try {
     const classes = await Class
       .find({ instructor: req.user._id }) // to get classes by only the user
-    console.log("Classes found for instructor:", classes);
 
     res.status(200).json({ classes });
   } catch (err) {
-    console.log("Error in GET /class:", err);
     res.status(500).json({ err: "Failed to get classes" });
   }
 });
@@ -42,10 +40,6 @@ router.get("/:id", verifyToken, async (req, res) => {
     const singleClass = await Class.findById(id)
       .populate("instructor", "username role");
 
-    console.log("Class found:", singleClass);
-    console.log("Class Students:", classStudents);
-    console.log("Available Students:", availableStudents);
-
     if (!singleClass) {
       return res.status(404).json({ err: "Class not found" });
     }
@@ -57,7 +51,6 @@ router.get("/:id", verifyToken, async (req, res) => {
       classStudents
     });
   } catch (err) {
-    console.log("Get class error:", err);
     res.status(500).json({ err: "Failed to get class" });
   }
 });
@@ -133,7 +126,6 @@ router.put('/:id/add-student/:studentId', verifyToken, async (req, res) => {
     }
     res.status(200).json({ message: 'Student added successfully', class: cls, student });
   } catch (error) {
-    console.error('Add student error:', error);
     res.status(500).json({ error: 'Could not add student' });
   }
 });
@@ -151,7 +143,6 @@ router.put('/:id/remove-student/:studentId', verifyToken, async (req, res) => {
     await cls.save();
     res.status(200).json({ message: 'Student removed successfully', class: cls, student });
   } catch (error) {
-    console.error('Remove student error:', error);
     res.status(500).json({ error: 'Could not remove student' });
   }
 });

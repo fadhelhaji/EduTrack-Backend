@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const express = require('express');
 
 const router = express.Router();
@@ -80,7 +79,6 @@ router.post('/sign-in', async (req, res) => {
 router.get('/students', async (req, res)=>{
   try {
     const students = await User.find({role: 'Student'})
-    console.log(students)
     res.status(200).json({students: students})
   } catch (error) {
     res.status(500).json({error: "Could not fetch students"})
@@ -91,7 +89,6 @@ router.get('/students/:id', async (req, res)=>{
   try {
     const { id } = req.params;
     const user = await User.findById(id)
-    console.log(user)
     res.status(200).json({user: user})
   } catch (error) {
     res.status(500).json({error: "Could not fetch user information"})
@@ -102,7 +99,6 @@ router.put('/students/:id/edit', async (req, res) => {
   try {
     const {id} = req.params
     const updatedStudent = await User.findByIdAndUpdate(id, req.body,{ new: true});
-    console.log(updatedStudent)
     res.status(200).json({ student: updatedStudent });
   } catch (error) {
     console.log(error)

@@ -6,9 +6,6 @@ const verifyToken = require('../middleware/verifyToken');
 const User = require("../models/user");
 const Class = require("../models/class");
 
-
-
-
 router.get('/my-assignments',verifyToken,async(req,res)=>{
 try {
   const studentClass = await Class.findOne({ student: req.user._id });
@@ -26,8 +23,6 @@ try {
 router.post("/new", verifyToken, async (req, res) => {
   try {
     req.body.instructor = req.user
-    // console.log(req.user)
-    // console.log(req.body)
     let deadline = new Date(req.body.deadline);
 
     // Set the last submission time to 1 minute before midnight
@@ -37,7 +32,6 @@ router.post("/new", verifyToken, async (req, res) => {
       ...req.body,
       deadline, // save the adjusted deadline
     });
-    // const newAssignment = await Assignment.create(req.body);
     res.status(201).json({ assignment });
   } catch (err) {
     console.log(err);
