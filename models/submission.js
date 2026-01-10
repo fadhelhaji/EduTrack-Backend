@@ -21,7 +21,22 @@ const submissionSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Assignment',
       required:true
-    }
+  }, 
+    grade: {
+    type: Number, 
+    default: null,
+    min: 0,
+    max: 100,
+  },
+  feedback: {
+    type: String,
+    default: ''
+  },
+  status: {
+    type: String,
+    enum: ['Pending', 'Graded', 'Incomplete'],
+    default: 'Pending'
+  }
   
 }, { timestamps: true });
 
