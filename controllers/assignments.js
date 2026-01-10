@@ -30,8 +30,8 @@ try {
 router.post("/new", verifyToken, async (req, res) => {
   try {
     req.body.instructor = req.user
-    console.log(req.user)
-    console.log(req.body)
+    // console.log(req.user)
+    // console.log(req.body)
     let deadline = new Date(req.body.deadline);
 
     // Set the last submission time to 1 minute before midnight
@@ -67,7 +67,8 @@ router.get("/:id", async (req, res) => {
     const { id } = req.params;
     const singleAssignment = await Assignment
       .findById(id)
-      .populate("instructor");
+      .populate("instructor")
+      .populate("class");
 
     if (!singleAssignment) {
       res.status(404).json({ err: "Assignment not found" });
@@ -118,9 +119,10 @@ router.put("/:id/edit", async (req, res) => {
 
 router.get('/:id/submissions', async (req, res) => {
   try {
-    const { id } = req.params;
-    const submissions = await Submission.find({ assignment: id }).populate("student")
-    res.status(200).json(submissions)
+  const { id } = req.params;
+  const submissions = await Submission.find({ assignment: id })
+  .populate("student", "firstName lastName")
+  .sort({ createdAt: -1 });    res.status(200).json(submissions)
   } catch (err) {
     console.log(err);
     res.status(500).json({ err: "Failed to fetch submissions for this assignment" });
