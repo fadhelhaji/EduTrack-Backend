@@ -5,7 +5,6 @@ const User = require("../models/user");
 const Assignment = require("../models/assignment");
 const sendEmail = require("../utilities/sendEmail");
 const verifyToken = require("../middleware/verifyToken");
-const verifyToken = require('../middleware/verifyToken');
 
 router.post("/", verifyToken, async (req, res) => {
   try {
