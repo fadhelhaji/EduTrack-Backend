@@ -41,6 +41,6 @@ app.use('/submission', verifyToken, submissionCtrl);
 
 
 // server
-app.listen(3000, () => {
-  console.log('Express is ready');
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Express is ready on port ${process.env.PORT || 3000}`);
 });
