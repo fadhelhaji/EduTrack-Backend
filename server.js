@@ -23,7 +23,7 @@ const assignmentCtrl = require('./controllers/assignments')
 const submissionCtrl = require('./controllers/submissions')
 
 // middleware
-// const verifyToken = require('./middleware/verifyToken');
+const verifyToken = require('./middleware/verifyToken');
 
 // global middleware
 app.use(cors());
@@ -39,9 +39,9 @@ app.get('/test', (req, res) => {
   res.status(200).json({ message: "Hello, You're logged in" });
 });
 
-app.use('/class', classCtrl);
-app.use('/assignment', assignmentCtrl);
-app.use('/submission', submissionCtrl);
+app.use('/class', verifyToken, classCtrl);
+app.use('/assignment', verifyToken, assignmentCtrl);
+app.use('/submission', verifyToken, submissionCtrl);
 
 // auth middleware
 // app.use(verifyToken);
