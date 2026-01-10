@@ -43,15 +43,21 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const submissions = await Submission
       .find({})
-      //.populate("class")      this is wrong it dosent match the model
-      //.populate("instructor") this is wrong it dosent match the model
       .populate("student")
-      .populate("assignment")
-      .populate("class", "className");
+      .populate({
+        path: "assignment",
+        select: "title instructor",
+        populate: { path: "instructor", select: "username _id" }
+      })
+      .populate({
+        path: "class",
+        select: "className instructor",
+        populate: { path: "instructor", select: "username _id" }
+      });
 
     res.status(200).json({ submissions });
   } catch (err) {
@@ -60,13 +66,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     const submission = await Submission
       .findById(id)
-      //.populate("class")    this is wrong it dosent match the model
-      //.populate("instructor")     this is wrong it dosent match the model
       .populate("student")
       .populate("assignment")
       .populate("class", "className");
@@ -91,19 +95,20 @@ router.put("/:id", verifyToken, async (req, res) => {
 
     // adding feedback and grades available only for instructor
     if (req.user.role !== 'Instructor') {
-        delete updateData.grade;
-        delete updateData.feedback;
-        delete updateData.status;} else {
-        if (updateData.grade !== undefined && updateData.grade !== null) {
-            updateData.status = 'Graded';
-        }
+      delete updateData.grade;
+      delete updateData.feedback;
+      delete updateData.status;
+    } else {
+      if (updateData.grade !== undefined && updateData.grade !== null) {
+        updateData.status = 'Graded';
+      }
     }
     const submission = await Submission.findByIdAndUpdate(
       id,
       updateData,
       { new: true }
     ).populate("student", "firstName lastName")
-    .populate("assignment", "title");
+      .populate("assignment", "title");
 
     if (!submission) {
       res.status(404).json({ err: "Submission not found" });
@@ -117,7 +122,7 @@ router.put("/:id", verifyToken, async (req, res) => {
 });
 
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     const submission = await Submission.findByIdAndDelete(id);

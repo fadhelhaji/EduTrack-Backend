@@ -10,10 +10,6 @@ const Class = require("../models/class");
 
 
 router.get('/my-assignments',verifyToken,async(req,res)=>{
-  // console.log('in my assignments')
-  // const allClasses = await Class.find()
-  // const myClass = allClasses.find((oneClass)=> oneClass.student.includes(req.user._id))
-  // const assignments = await Assignment.find({class: myClass._id}) 
 try {
   const studentClass = await Class.findOne({ student: req.user._id });
       if (!studentClass) {
@@ -62,7 +58,7 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     const singleAssignment = await Assignment
@@ -81,7 +77,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     const deletedAssignment = await Assignment.findByIdAndDelete(id);
@@ -97,7 +93,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id/edit", async (req, res) => {
+router.put("/:id/edit", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     const updatedAssignment = await Assignment.findByIdAndUpdate(
@@ -117,7 +113,7 @@ router.put("/:id/edit", async (req, res) => {
   }
 });
 
-router.get('/:id/submissions', async (req, res) => {
+router.get('/:id/submissions', verifyToken, async (req, res) => {
   try {
   const { id } = req.params;
   const submissions = await Submission.find({ assignment: id })

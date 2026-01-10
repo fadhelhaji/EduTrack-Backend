@@ -5,11 +5,9 @@ const submissionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
   notes: {
     type: String
   },
-
   student: 
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -42,7 +40,6 @@ const submissionSchema = new mongoose.Schema({
     enum: ['Pending', 'Graded', 'Incomplete'],
     default: 'Pending'
   }
-  
 }, { timestamps: true });
 
 submissionSchema.index({ student: 1, assignment: 1 }, { unique: true });

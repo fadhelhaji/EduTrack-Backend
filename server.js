@@ -34,17 +34,10 @@ app.use(express.json());
 app.use('/auth', authCtrl);
 
 
-// protected routes
-app.get('/test', (req, res) => {
-  res.status(200).json({ message: "Hello, You're logged in" });
-});
 
 app.use('/class', verifyToken, classCtrl);
 app.use('/assignment', verifyToken, assignmentCtrl);
 app.use('/submission', verifyToken, submissionCtrl);
-
-// auth middleware
-// app.use(verifyToken);
 
 
 // server

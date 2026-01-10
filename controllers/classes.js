@@ -76,7 +76,7 @@ router.post('/:id/assignment/new', verifyToken, async (req, res) => {
   }
 })
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     const deletedClass = await Class.findByIdAndDelete(id);
@@ -92,7 +92,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id/edit", async (req, res) => {
+router.put("/:id/edit", verifyToken, async (req, res) => {
   try {
     const { id } = req.params;
     const updatedClass = await Class.findByIdAndUpdate(
@@ -156,7 +156,7 @@ router.put('/:id/remove-student/:studentId', verifyToken, async (req, res) => {
   }
 });
 
-router.get("/:classId/assignment/:assignmentId", async (req, res) => {
+router.get("/:classId/assignment/:assignmentId", verifyToken, async (req, res) => {
   try {
     const { classId, assignmentId } = req.params;
 
@@ -174,10 +174,6 @@ router.get("/:classId/assignment/:assignmentId", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch assignment" });
   }
 });
-
-
-
-
 
 
 

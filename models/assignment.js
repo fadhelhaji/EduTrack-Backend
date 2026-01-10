@@ -19,20 +19,10 @@ const assignmentSchema = new Schema({
         ref: 'User',
         required: true
     },
-    // submission: 
-    //     {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: 'Submission',
-    //         unique: true,
-    //         partialFilterExpression: { submission: { $ne: null } }
-    //     }
-    // ,
     class: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Class', //ref was wrong
+            ref: 'Class',
     }
-    
-
 }, 
 {timestamps: true}
 );
