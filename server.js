@@ -40,6 +40,10 @@ app.use('/assignment', verifyToken, assignmentCtrl);
 app.use('/submission', verifyToken, submissionCtrl);
 
 
+const path = require("path");
+
+
+
 // server
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Express is ready on port ${process.env.PORT || 3000}`);
